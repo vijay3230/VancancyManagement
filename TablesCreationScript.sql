@@ -1,0 +1,99 @@
+USE [JobOpening]
+GO
+
+/****** Object:  Table [dbo].[Department]    Script Date: 04/05/2024 10:37:37 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'Department')
+BEGIN
+	CREATE TABLE [dbo].[Department](
+		[id] [int] IDENTITY(1,1) NOT NULL,
+		[title] [nvarchar](50) NULL,
+	 CONSTRAINT [PK_Department] PRIMARY KEY CLUSTERED 
+	(
+		[id] ASC
+	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+	) ON [PRIMARY]
+END
+GO
+
+USE [JobOpening]
+GO
+
+/****** Object:  Table [dbo].[Location]    Script Date: 04/05/2024 10:38:31 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'Location')
+BEGIN
+CREATE TABLE [dbo].[Location](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[title] [nvarchar](50) NULL,
+	[city] [nvarchar](50) NULL,
+	[state] [nvarchar](50) NULL,
+	[country] [nvarchar](50) NULL,
+	[zip] [int] NULL,
+ CONSTRAINT [PK_Location] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+END
+GO
+
+
+USE [JobOpening]
+GO
+
+/****** Object:  Table [dbo].[Job]    Script Date: 04/05/2024 11:14:04 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'Job')
+BEGIN
+CREATE TABLE [dbo].[Job](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[code]  AS ('JOB'+right('0000'+CONVERT([varchar](5),[id]),(5))) PERSISTED,
+	[title] [nvarchar](50) NULL,
+	[description] [nvarchar](50) NULL,
+	[locationId] [int] NULL,
+	[departmentId] [int] NULL,
+	[postedDate] [date] NULL,
+	[closingDate] [date] NULL,
+ CONSTRAINT [PK_JobTable] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+END
+GO
+
+ALTER TABLE [dbo].[Job]  WITH CHECK ADD  CONSTRAINT [FK_Job_Department] FOREIGN KEY([departmentId])
+REFERENCES [dbo].[Department] ([id])
+GO
+
+ALTER TABLE [dbo].[Job] CHECK CONSTRAINT [FK_Job_Department]
+GO
+
+ALTER TABLE [dbo].[Job]  WITH CHECK ADD  CONSTRAINT [FK_Job_Location] FOREIGN KEY([locationId])
+REFERENCES [dbo].[Location] ([id])
+GO
+
+ALTER TABLE [dbo].[Job] CHECK CONSTRAINT [FK_Job_Location]
+GO
+
+
+
+
+
+
